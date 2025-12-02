@@ -6,12 +6,13 @@ interface Content {
   title: string;
   duration: string;
   thumbnail: string;
+  category?: "live" | "podcast" | "interview" | "politics";
   isLive?: boolean;
 }
 
 interface ContentRowProps {
   title: string;
-  category: "live" | "podcast" | "interview";
+  category: "live" | "podcast" | "interview" | "politics";
   contents: Content[];
 }
 
@@ -31,10 +32,11 @@ const ContentRow = ({ title, category, contents }: ContentRowProps) => {
           {contents.map((content) => (
             <ContentCard
               key={content.id}
+              id={content.id}
               title={content.title}
               duration={content.duration}
               thumbnail={content.thumbnail}
-              category={category}
+              category={content.category || category}
               isLive={content.isLive}
             />
           ))}
