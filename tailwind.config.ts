@@ -59,6 +59,10 @@ export default {
           DEFAULT: "hsl(var(--interview))",
           glow: "hsl(var(--interview-glow))",
         },
+        reel: {
+          DEFAULT: "hsl(var(--reel))",
+          glow: "hsl(var(--reel-glow))",
+        },
       },
       borderRadius: {
         lg: "var(--radius)",
