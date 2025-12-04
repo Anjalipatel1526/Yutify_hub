@@ -1,11 +1,34 @@
-import { Search, Plus, User, Heart, Home, Film, Upload as UploadIcon, TvMinimal } from "lucide-react";
+import { useState, useEffect } from "react";
+import { Search, Plus, User, Heart, Home, Film, Upload as UploadIcon, TvMinimal, LogOut } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import type { Session } from "@supabase/supabase-js";
 
 const YutifyHeader = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const [session, setSession] = useState<Session | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    await supabase.auth.signOut();
+    toast.success("Logged out successfully");
+    navigate("/");
+  };
 
   const navItems = [
     { id: "home", label: "Home", icon: Home, path: "/" },
@@ -78,15 +101,27 @@ const YutifyHeader = () => {
               <Heart className="w-5 h-5" />
             </Button>
 
-            <Button
-              onClick={() => navigate("/auth")}
-              variant="ghost"
-              size="icon"
-              className="rounded-full hover:bg-primary/10 hover:text-primary"
-              title="Account"
-            >
-              <User className="w-5 h-5" />
-            </Button>
+            {session ? (
+              <Button
+                onClick={handleLogout}
+                variant="ghost"
+                size="icon"
+                className="rounded-full hover:bg-destructive/10 hover:text-destructive"
+                title="Logout"
+              >
+                <LogOut className="w-5 h-5" />
+              </Button>
+            ) : (
+              <Button
+                onClick={() => navigate("/auth")}
+                variant="ghost"
+                size="icon"
+                className="rounded-full hover:bg-primary/10 hover:text-primary"
+                title="Sign In"
+              >
+                <User className="w-5 h-5" />
+              </Button>
+            )}
           </div>
         </div>
       </div>
