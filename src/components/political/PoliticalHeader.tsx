@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { Bookmark, User, LogOut, Menu, X } from "lucide-react";
+import { Bookmark, User, LogOut, Menu, X, Upload } from "lucide-react";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Session } from "@supabase/supabase-js";
@@ -73,6 +73,15 @@ export default function PoliticalHeader({ isScrolled = false, onSearch }: Politi
               <Button
                 variant="ghost"
                 size="icon"
+                onClick={() => navigate("/upload")}
+                className="hidden md:flex"
+                title="Upload Content"
+              >
+                <Upload className="w-5 h-5" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={() => navigate("/watchlist")}
                 className="hidden md:flex"
               >
@@ -126,6 +135,10 @@ export default function PoliticalHeader({ isScrolled = false, onSearch }: Politi
           
           {session ? (
             <div className="flex flex-col gap-2">
+              <Button variant="ghost" onClick={() => navigate("/upload")} className="justify-start">
+                <Upload className="w-5 h-5 mr-2" />
+                Upload
+              </Button>
               <Button variant="ghost" onClick={() => navigate("/watchlist")} className="justify-start">
                 <Bookmark className="w-5 h-5 mr-2" />
                 Watchlist
